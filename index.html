@@ -42,6 +42,24 @@
       font-size: 1.5rem;
       font-weight: bold;
       color: var(--text-color);
+      margin-bottom: 1.5rem;
+    }
+
+    /* Barra de progresso */
+    .progress-container {
+      width: 100%;
+      background-color: var(--progress-bg-color);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .progress-bar {
+      height: 20px;
+      background-color: #2196F3;
+      width: 0;
+      border-radius: 10px;
+      transition: width 0.5s ease;
     }
 
     /* Switch estiloso */
@@ -101,12 +119,14 @@
       --bg-color: #ffffff;
       --text-color: #333333;
       --container-bg-color: #f0f0f0;
+      --progress-bg-color: #e0e0e0;
     }
 
     [data-theme="dark"] {
       --bg-color: #121212;
       --text-color: #ffffff;
       --container-bg-color: #1e1e1e;
+      --progress-bg-color: #333333;
     }
 
     /* Responsividade */
@@ -142,6 +162,9 @@
   <div class="container">
     <h1>Contagem regressiva para ver Aialla ❤️</h1>
     <div id="countdown">Carregando...</div>
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
   </div>
 
   <div class="theme-switch">
@@ -152,24 +175,33 @@
   </div>
 
   <script>
-    const targetDate = new Date('2025-03-29T11:00:00-03:00'); // Data no fuso horário de Brasília
+    const startDate = new Date('2025-02-13T00:00:00-03:00'); // Data inicial: 13/02/2025
+    const targetDate = new Date('2025-03-29T11:00:00-03:00'); // Data final: 29/03/2025
 
-    // Atualiza a contagem regressiva
+    // Atualiza a contagem regressiva e a barra de progresso
     function updateCountdown() {
       const now = new Date();
-      const timeDifference = targetDate - now;
+      const totalTime = targetDate - startDate;
+      const elapsedTime = now - startDate;
+      const remainingTime = targetDate - now;
 
-      if (timeDifference <= 0) {
+      if (remainingTime <= 0) {
         document.getElementById('countdown').innerText = "Chegou o grande dia!";
+        document.getElementById('progress-bar').style.width = "100%";
         return;
       }
 
-      const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+      // Atualiza a contagem regressiva
+      const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
 
       document.getElementById('countdown').innerText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+      // Atualiza a barra de progresso
+      const progress = (elapsedTime / totalTime) * 100;
+      document.getElementById('progress-bar').style.width = `${Math.min(progress, 100)}%`;
     }
 
     // Alterna entre light e dark mode
