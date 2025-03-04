@@ -18,6 +18,21 @@
       background-color: var(--bg-color);
       color: var(--text-color);
       transition: background-color 0.3s, color 0.3s;
+      opacity: 0;
+      /* Inicia invisível para a animação */
+      animation: fadeIn 1s ease-in-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .container {
@@ -28,6 +43,21 @@
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
       max-width: 90%;
       width: 100%;
+      opacity: 0;
+      /* Inicia invisível para a animação */
+      animation: slideIn 1s ease-in-out 0.5s forwards;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     h1 {
@@ -76,58 +106,6 @@
       transition: width 0.5s ease;
     }
 
-    /* Switch estiloso */
-    .theme-switch {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-    }
-
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 60px;
-      height: 34px;
-    }
-
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      transition: 0.4s;
-      border-radius: 34px;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 26px;
-      width: 26px;
-      left: 4px;
-      bottom: 4px;
-      background-color: white;
-      transition: 0.4s;
-      border-radius: 50%;
-    }
-
-    input:checked+.slider {
-      background-color: #2196F3;
-    }
-
-    input:checked+.slider:before {
-      transform: translateX(26px);
-    }
-
     /* Temas */
     :root {
       --bg-color: #ffffff;
@@ -156,22 +134,6 @@
       .loader-flags {
         font-size: 1.5rem;
       }
-
-      .switch {
-        width: 50px;
-        height: 28px;
-      }
-
-      .slider:before {
-        height: 20px;
-        width: 20px;
-        left: 4px;
-        bottom: 4px;
-      }
-
-      input:checked+.slider:before {
-        transform: translateX(22px);
-      }
     }
   </style>
 </head>
@@ -190,8 +152,6 @@
       </div>
     </div>
   </div>
-
-
 
   <script>
     const startDate = new Date('2025-02-13T00:00:00-03:00'); // Data inicial: 13/02/2025
@@ -216,41 +176,22 @@
       const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
 
-      document.getElementById('countdown').innerText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+      document.getElementById('countdown').innerText = `${days} dias, ${hours} horas, ${minutes} minutos e ${seconds} segundos`;
 
       // Atualiza a barra de progresso
       const progress = (elapsedTime / totalTime) * 100;
       document.getElementById('loader-progress').style.width = `${Math.min(progress, 100)}%`;
     }
 
-    // Alterna entre light e dark mode
-    function toggleTheme() {
-      const body = document.body;
-      if (body.getAttribute('data-theme') === 'dark') {
-        body.removeAttribute('data-theme');
-        localStorage.setItem('theme', 'light');
-      } else {
-        body.setAttribute('data-theme', 'dark');
-        localStorage.setItem('theme', 'dark');
-      }
-    }
-
     // Define o tema padrão com base nas preferências do dispositivo
     function setInitialTheme() {
-      const savedTheme = localStorage.getItem('theme');
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-      if (savedTheme === 'dark' || (prefersDark && savedTheme !== 'light')) {
+      if (prefersDark) {
         document.body.setAttribute('data-theme', 'dark');
-        document.getElementById('theme-toggle').checked = true;
       } else {
         document.body.removeAttribute('data-theme');
-        document.getElementById('theme-toggle').checked = false;
       }
     }
-
-    // Configura o evento de clique no switch
-    document.getElementById('theme-toggle').addEventListener('change', toggleTheme);
 
     // Inicializa o tema e a contagem regressiva
     setInitialTheme();
